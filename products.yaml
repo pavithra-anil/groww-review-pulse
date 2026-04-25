@@ -1,0 +1,7 @@
+products:
+  - name: groww
+    display_name: "Groww"
+    play_store_id: "com.nextbillion.groww"
+    app_store_id: "1404871703"
+    app_store_country: "in"
+    weeks: 10

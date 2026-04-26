@@ -3,7 +3,7 @@ import numpy as np
 from datetime import datetime
 
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-BATCH_SIZE = 64
+BATCH_SIZE = 8
 UMAP_COMPONENTS = 15
 UMAP_NEIGHBORS = 15
 HDBSCAN_MIN_CLUSTER_SIZE = 15

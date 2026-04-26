@@ -206,7 +206,6 @@ def run(
     typer.echo(f"\n🚀 Running full pipeline for {product} — {iso_week}")
     typer.echo(f"   Run ID: {run_id}\n")
 
-    # Run all phases
     from agent.config import settings
     from agent.storage import create_run, save_reviews, update_run_status
     from agent.time_utils import weeks_ago_date
@@ -214,11 +213,9 @@ def run(
     from agent.ingestion.appstore import fetch_appstore_reviews
     from agent.clustering import run_clustering
     from agent.summarization import run_summarization
-    from agent.renderer.docs_tree import build_doc_requests
     from agent.renderer.email_html import render_email, get_email_subject
     from agent.mcp_client.docs_ops import publish_to_docs
     from agent.mcp_client.gmail_ops import publish_to_gmail
-    import json
 
     product_config = settings.get_product(product)
     cutoff = weeks_ago_date(weeks)
@@ -259,9 +256,9 @@ def run(
     os.makedirs(artifacts_dir, exist_ok=True)
     html_content, text_content = render_email(summary)
     subject = get_email_subject(summary)
-    with open(f"{artifacts_dir}/email.html", "w") as f:
+    with open(f"{artifacts_dir}/email.html", "w", encoding="utf-8") as f:
         f.write(html_content)
-    with open(f"{artifacts_dir}/email.txt", "w") as f:
+    with open(f"{artifacts_dir}/email.txt", "w", encoding="utf-8") as f:
         f.write(f"Subject: {subject}\n\n{text_content}")
     update_run_status(run_id, "rendered")
     typer.echo(f"✅ Phase 4: Render complete")
@@ -276,6 +273,7 @@ def run(
 
     typer.echo(f"\n🎉 Full pipeline complete for {product} — {iso_week}!")
     typer.echo(f"   Doc: {doc_url}")
+    typer.echo(f"   Dashboard: https://groww-review-pulse-navy.vercel.app/")
 
 
 if __name__ == "__main__":

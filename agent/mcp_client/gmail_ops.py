@@ -10,7 +10,6 @@ def publish_to_gmail(run_id: str, summary: dict, doc_url: str = "") -> str:
     """
     Create Gmail draft with weekly pulse report via MCP server.
     Returns message ID.
-    Idempotent — skips if already sent for this run.
     """
     to_email = os.getenv("GMAIL_TO", "")
     if not to_email:
@@ -21,14 +20,15 @@ def publish_to_gmail(run_id: str, summary: dict, doc_url: str = "") -> str:
 
     confirm_send = os.getenv("CONFIRM_SEND", "false").lower() == "true"
 
-    product = summary.get("product", "groww").title()
-    week = summary.get("week", "")
     themes = summary.get("themes", [])
-    action_ideas = summary.get("action_ideas", [])
+    week = summary.get("week", "")
     top_theme = themes[0]["name"] if themes else "Weekly Update"
 
     subject = f"[Weekly Pulse] Groww — {week} — {top_theme}"
-    body = build_email_body(summary, doc_url)
+
+    # Use HTML email body
+    from agent.renderer.email_html import render_email
+    html_body, _ = render_email(summary, doc_deep_link=doc_url or "{DOC_DEEP_LINK}")
 
     # Wake up MCP server
     wake_up_server()
@@ -37,11 +37,11 @@ def publish_to_gmail(run_id: str, summary: dict, doc_url: str = "") -> str:
     print(f"  To: {to_email}")
     print(f"  Subject: {subject}")
 
-    # Call MCP server
+    # Call MCP server with HTML body
     response = call_mcp("/create_email_draft", {
         "to": to_email,
         "subject": subject,
-        "body": body,
+        "body": html_body,
     })
 
     message_id = response.get("draft_id", run_id)
@@ -62,14 +62,14 @@ def publish_to_gmail(run_id: str, summary: dict, doc_url: str = "") -> str:
     if confirm_send:
         print(f"  ✓ Email sent to {to_email}")
     else:
-        print(f"  ✓ Email draft created in Gmail")
+        print(f"  ✓ HTML email draft created in Gmail")
         print(f"  ℹ Set CONFIRM_SEND=true in .env to send automatically")
 
     return message_id
 
 
 def build_email_body(summary: dict, doc_url: str = "") -> str:
-    """Build plain text email body"""
+    """Build plain text email body (fallback)"""
     week = summary.get("week", "")
     themes = summary.get("themes", [])
     action_ideas = summary.get("action_ideas", [])
@@ -100,7 +100,6 @@ def build_email_body(summary: dict, doc_url: str = "") -> str:
         lines.append("")
 
     lines.append("---")
-    lines.append("This report is generated from public app store reviews.")
-    lines.append("Facts only. No investment advice.")
+    lines.append("Facts only. No investment advice. No PII collected.")
 
     return "\n".join(lines)

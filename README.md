@@ -167,15 +167,35 @@ python -m agent run --product groww --weeks 10
 
 The pipeline is **idempotent** — re-running the same week never creates duplicates.
 
+To run for the current week:
+```bash
+python -m agent run --product groww --weeks 10
+```
+
 To run for a specific past week:
 ```bash
 python -m agent run --product groww --week 2026-W16
 ```
 
-To run for current week:
-```bash
-python -m agent run --product groww --weeks 10
-```
+Each run gets a unique `run_id = sha1(product + iso_week)` — same week always produces the same ID, preventing duplicate sections in Google Docs or duplicate Gmail drafts.
+
+---
+
+## 🗂️ Theme Legend
+
+Themes are discovered automatically by clustering — they are not predefined. However, based on Groww's review history, common themes include:
+
+| Theme | What it captures |
+|---|---|
+| App Performance & Crashes | Reports of lag, freezes, crashes during trading hours |
+| User Interface & Experience | UI feedback, ease of use, navigation |
+| Trading Features | Trading tools, charts, order types, analytics |
+| Charges & Fee Complaints | Hidden charges, brokerage fees, unexpected deductions |
+| TradingView Integration | Chart integration feedback, technical analysis tools |
+| Customer Support | Response time, issue resolution, support quality |
+| KYC & Onboarding | Account opening, document verification, first-time setup |
+
+> Note: Actual themes vary each week based on what users are talking about. The LLM names each cluster based on the reviews it contains.
 
 ---
 

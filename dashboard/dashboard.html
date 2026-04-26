@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Groww Review Pulse</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0a0f0d;
+            --surface: #111a16;
+            --surface2: #172018;
+            --border: #1e2e22;
+            --accent: #00d09c;
+            --accent2: #00f5b8;
+            --warn: #f59e0b;
+            --danger: #ef4444;
+            --text: #e8f0eb;
+            --muted: #4a6452;
+            --muted2: #2a3d30;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Ticker */
+        .ticker-wrap {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            overflow: hidden;
+            padding: 10px 0;
+            position: relative;
+        }
+
+        .ticker-wrap::before,
+        .ticker-wrap::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 80px;
+            z-index: 2;
+        }
+
+        .ticker-wrap::before {
+            left: 0;
+            background: linear-gradient(to right, var(--surface), transparent);
+        }
+
+        .ticker-wrap::after {
+            right: 0;
+            background: linear-gradient(to left, var(--surface), transparent);
+        }
+
+        .ticker {
+            display: flex;
+            gap: 48px;
+            animation: ticker 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        .ticker-item {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+        }
+
+        .ticker-item .val {
+            color: var(--text);
+        }
+
+        .ticker-item .up {
+            color: var(--accent);
+        }
+
+        .ticker-item .down {
+            color: var(--danger);
+        }
+
+        @keyframes ticker {
+            0% {
+                transform: translateX(0);
+            }
+
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Nav */
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-logo {
+            width: 36px;
+            height: 36px;
+            background: var(--accent);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .nav-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+        }
+
+        .nav-sub {
+            font-size: 11px;
+            color: var(--muted);
+            font-family: 'DM Mono', monospace;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            background: rgba(0, 208, 156, 0.1);
+            border: 1px solid rgba(0, 208, 156, 0.2);
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+
+        .live-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            animation: pulse 2s ease infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.5;
+                transform: scale(0.8);
+            }
+        }
+
+        .week-badge {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            padding: 4px 10px;
+            border-radius: 999px;
+        }
+
+        /* Main */
+        main {
+            padding: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Hero stats */
+        .hero {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--muted);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .stat-card:hover::before {
+            opacity: 1;
+        }
+
+        .stat-icon {
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+
+        .stat-num {
+            font-family: 'Syne', sans-serif;
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--accent);
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'DM Mono', monospace;
+        }
+
+        .stat-sub {
+            font-size: 11px;
+            color: var(--muted);
+            margin-top: 8px;
+        }
+
+        /* Section header */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .section-count {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        /* Theme cards */
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        .theme-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.2s;
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .theme-card:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .theme-card:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .theme-card:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .theme-card:nth-child(4) {
+            animation-delay: 0.4s;
+        }
+
+        .theme-card:nth-child(5) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .theme-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(0, 208, 156, 0.08);
+        }
+
+        .theme-rank {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 28px;
+            height: 28px;
+            background: var(--muted2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .theme-name {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 16px;
+            padding-right: 40px;
+            line-height: 1.3;
+        }
+
+        .theme-metrics {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .metric {
+            flex: 1;
+            background: var(--surface2);
+            border-radius: 8px;
+            padding: 10px 12px;
+        }
+
+        .metric-val {
+            font-family: 'Syne', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+
+        .metric-label {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--muted);
+            text-transform: uppercase;
+        }
+
+        .urgency-critical {
+            color: var(--danger);
+        }
+
+        .urgency-high {
+            color: var(--warn);
+        }
+
+        .urgency-medium {
+            color: #84cc16;
+        }
+
+        .urgency-low {
+            color: var(--accent);
+        }
+
+        .urgency-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .badge-critical {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+
+        .badge-high {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warn);
+        }
+
+        .badge-medium {
+            background: rgba(132, 204, 22, 0.15);
+            color: #84cc16;
+        }
+
+        .badge-low {
+            background: rgba(0, 208, 156, 0.15);
+            color: var(--accent);
+        }
+
+        .theme-quote {
+            font-size: 12px;
+            color: var(--muted);
+            font-style: italic;
+            line-height: 1.5;
+            border-left: 2px solid var(--border);
+            padding-left: 10px;
+        }
+
+        .keyphrases {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .keyphrase {
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--muted);
+            background: var(--muted2);
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        /* Two col layout */
+        .two-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 40px;
+        }
+
+        /* Actions */
+        .actions-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .action-item {
+            display: flex;
+            gap: 14px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--border);
+            animation: fadeUp 0.5s ease both;
+        }
+
+        .action-item:nth-child(1) {
+            animation-delay: 0.1s;
+        }
+
+        .action-item:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .action-item:nth-child(3) {
+            animation-delay: 0.3s;
+        }
+
+        .action-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .action-num {
+            width: 28px;
+            height: 28px;
+            background: rgba(0, 208, 156, 0.1);
+            border: 1px solid rgba(0, 208, 156, 0.2);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .action-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--text);
+            padding-top: 4px;
+        }
+
+        /* Sources */
+        .sources-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .source-row {
+            margin-bottom: 16px;
+        }
+
+        .source-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+
+        .source-name {
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .source-count {
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .source-bar {
+            height: 6px;
+            background: var(--muted2);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .source-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        .source-fill.appstore {
+            background: linear-gradient(to right, #007aff, #5ac8fa);
+        }
+
+        /* Run info */
+        .run-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .run-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'DM Mono', monospace;
+            font-size: 12px;
+            color: var(--accent);
+        }
+
+        .run-id {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .pipeline-steps {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex: 1;
+        }
+
+        .pipeline-step {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            flex: 1;
+        }
+
+        .step-box {
+            background: rgba(0, 208, 156, 0.1);
+            border: 1px solid rgba(0, 208, 156, 0.3);
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-family: 'DM Mono', monospace;
+            font-size: 10px;
+            color: var(--accent);
+            white-space: nowrap;
+        }
+
+        .step-arrow {
+            color: var(--muted);
+            font-size: 12px;
+            padding: 0 4px;
+        }
+
+        /* Footer */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 24px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .footer-left {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 16px;
+        }
+
+        .footer-link {
+            font-family: 'DM Mono', monospace;
+            font-size: 11px;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+        }
+
+        /* Loading */
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 60vh;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 900px) {
+            main {
+                padding: 20px;
+            }
+
+            .hero {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .themes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-col {
+                grid-template-columns: 1fr;
+            }
+
+            nav {
+                padding: 16px 20px;
+            }
+
+            .pipeline-steps {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker" id="ticker">
+            <div class="ticker-item">PULSE REVIEWS <span class="val up" id="t-reviews">—</span></div>
+            <div class="ticker-item">THEMES FOUND <span class="val up" id="t-themes">—</span></div>
+            <div class="ticker-item">TOP URGENCY <span class="val" id="t-urgency">—</span></div>
+            <div class="ticker-item">PLAY STORE <span class="val up" id="t-play">—</span></div>
+            <div class="ticker-item">APP STORE <span class="val up" id="t-app">—</span></div>
+            <div class="ticker-item">WEEK <span class="val" id="t-week">—</span></div>
+            <div class="ticker-item">STATUS <span class="val up" id="t-status">—</span></div>
+            <!-- Duplicate for seamless loop -->
+            <div class="ticker-item">PULSE REVIEWS <span class="val up" id="t-reviews2">—</span></div>
+            <div class="ticker-item">THEMES FOUND <span class="val up" id="t-themes2">—</span></div>
+            <div class="ticker-item">TOP URGENCY <span class="val" id="t-urgency2">—</span></div>
+            <div class="ticker-item">PLAY STORE <span class="val up" id="t-play2">—</span></div>
+            <div class="ticker-item">APP STORE <span class="val up" id="t-app2">—</span></div>
+            <div class="ticker-item">WEEK <span class="val" id="t-week2">—</span></div>
+            <div class="ticker-item">STATUS <span class="val up" id="t-status2">—</span></div>
+        </div>
+    </div>
+
+    <!-- Nav -->
+    <nav>
+        <div class="nav-brand">
+            <div class="nav-logo">📊</div>
+            <div>
+                <div class="nav-title">Groww Review Pulse</div>
+                <div class="nav-sub">AI Review Intelligence · MCP Powered</div>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="week-badge" id="nav-week">Loading...</div>
+            <div class="live-badge">
+                <div class="live-dot"></div>LIVE
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main -->
+    <main id="app">
+        <div class="loading">
+            <div class="spinner"></div>
+            <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)">Loading pulse data...</div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-left">
+            Facts only · No investment advice · No PII collected · Generated by Groww Review Pulse Agent
+        </div>
+        <div class="footer-links">
+            <a href="https://github.com/pavithra-anil/groww-review-pulse" class="footer-link" target="_blank">GitHub
+                →</a>
+            <a href="https://docs.google.com/document/d/1Bgg7uJqsyziZyBVku-iTf1IIXICLE192F8cB7Z5mUqc/edit"
+                class="footer-link" target="_blank">Google Doc →</a>
+        </div>
+    </footer>
+
+    <script>
+        function urgencyClass(score) {
+            if (score >= 9) return 'critical';
+            if (score >= 7) return 'high';
+            if (score >= 5) return 'medium';
+            return 'low';
+        }
+
+        function urgencyLabel(score) {
+            if (score >= 9) return 'CRITICAL';
+            if (score >= 7) return 'HIGH';
+            if (score >= 5) return 'MEDIUM';
+            return 'LOW';
+        }
+
+        function calcUrgency(count, maxCount) {
+            return Math.min(9.5, Math.round((count / maxCount) * 100) / 10);
+        }
+
+        function formatDate(str) {
+            if (!str) return '—';
+            return new Date(str).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+        }
+
+        async function loadData() {
+            try {
+                const res = await fetch('pulse_data.json');
+                const data = await res.json();
+                render(data);
+            } catch (e) {
+                document.getElementById('app').innerHTML = `
+      <div class="loading">
+        <div style="font-size:32px">⚠️</div>
+        <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)">
+          Could not load pulse_data.json<br>Make sure the file exists in the same folder.
+        </div>
+      </div>`;
+            }
+        }
+
+        function render(data) {
+            const { run, themes, sources, total_reviews } = data;
+            const week = run.iso_week || '—';
+            const maxCount = Math.max(...themes.map(t => t.review_count));
+            const topUrgency = calcUrgency(themes[0]?.review_count || 0, maxCount);
+
+            // Update ticker
+            const tickerVals = {
+                't-reviews': total_reviews, 't-reviews2': total_reviews,
+                't-themes': themes.length, 't-themes2': themes.length,
+                't-urgency': topUrgency + '/10', 't-urgency2': topUrgency + '/10',
+                't-play': sources.playstore || 0, 't-play2': sources.playstore || 0,
+                't-app': sources.appstore || 0, 't-app2': sources.appstore || 0,
+                't-week': week, 't-week2': week,
+                't-status': run.status?.toUpperCase() || 'DONE', 't-status2': run.status?.toUpperCase() || 'DONE',
+            };
+            Object.entries(tickerVals).forEach(([id, val]) => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = val;
+            });
+
+            // Nav week
+            document.getElementById('nav-week').textContent = week;
+
+            // Build HTML
+            const app = document.getElementById('app');
+            app.innerHTML = `
+    <!-- Run info -->
+    <div class="run-card">
+      <div>
+        <div class="run-status">
+          <div class="live-dot"></div>
+          ${run.status?.toUpperCase() || 'COMPLETE'}
+        </div>
+        <div class="run-id">Run: ${run.id?.slice(0, 12)}...</div>
+      </div>
+      <div class="pipeline-steps">
+        ${['Ingest', 'Cluster', 'Summarize', 'Render', 'Publish', 'Done'].map((s, i, arr) => `
+          <div class="pipeline-step">
+            <div class="step-box">${s}</div>
+            ${i < arr.length - 1 ? '<span class="step-arrow">→</span>' : ''}
+          </div>
+        `).join('')}
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">
+        ${formatDate(run.created_at)}
+      </div>
+    </div>
+
+    <!-- Hero Stats -->
+    <div class="hero">
+      <div class="stat-card">
+        <div class="stat-icon">📥</div>
+        <div class="stat-num">${total_reviews.toLocaleString()}</div>
+        <div class="stat-label">Reviews Analyzed</div>
+        <div class="stat-sub">${sources.playstore || 0} Play · ${sources.appstore || 0} App Store</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🎯</div>
+        <div class="stat-num">${themes.length}</div>
+        <div class="stat-label">Themes Found</div>
+        <div class="stat-sub">UMAP + HDBSCAN clustering</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-num urgency-${urgencyClass(topUrgency)}">${topUrgency}</div>
+        <div class="stat-label">Top Urgency Score</div>
+        <div class="stat-sub">${themes[0]?.name?.split(' ').slice(0, 3).join(' ') || '—'}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">✅</div>
+        <div class="stat-num" style="font-size:24px;padding-top:6px">MCP</div>
+        <div class="stat-label">Delivery Status</div>
+        <div class="stat-sub">Google Docs + Gmail ✓</div>
+      </div>
+    </div>
+
+    <!-- Themes -->
+    <div class="section-header">
+      <div class="section-title">Top Themes This Week</div>
+      <div class="section-count">${themes.length} themes · ${total_reviews} reviews</div>
+    </div>
+    <div class="themes-grid">
+      ${themes.map(theme => {
+                const urgency = calcUrgency(theme.review_count, maxCount);
+                const uClass = urgencyClass(urgency);
+                const uLabel = urgencyLabel(urgency);
+                let keyphrases = [];
+                try { keyphrases = JSON.parse(theme.keyphrases_json || '[]'); } catch (e) { }
+                return `
+        <div class="theme-card">
+          <div class="theme-rank">${theme.rank}</div>
+          <div class="theme-name">${theme.name || 'Theme ' + theme.rank}</div>
+          <div class="theme-metrics">
+            <div class="metric">
+              <div class="metric-val urgency-${uClass}">${urgency}/10</div>
+              <div class="metric-label">Urgency</div>
+            </div>
+            <div class="metric">
+              <div class="metric-val">${theme.review_count}</div>
+              <div class="metric-label">Reviews</div>
+            </div>
+          </div>
+          <div class="urgency-badge badge-${uClass}">${uLabel}</div>
+          ${theme.quote ? `<div class="theme-quote">"${theme.quote}"</div>` : ''}
+          ${keyphrases.length ? `
+          <div class="keyphrases">
+            ${keyphrases.slice(0, 4).map(k => `<span class="keyphrase">${k}</span>`).join('')}
+          </div>` : ''}
+        </div>`;
+            }).join('')}
+    </div>
+
+    <!-- Two col -->
+    <div class="two-col">
+      <!-- Action Ideas -->
+      <div>
+        <div class="section-header">
+          <div class="section-title">Action Ideas</div>
+        </div>
+        <div class="actions-card">
+          ${(run.action_ideas || []).length ?
+                    run.action_ideas.map((idea, i) => `
+            <div class="action-item">
+              <div class="action-num">${i + 1}</div>
+              <div class="action-text">${idea}</div>
+            </div>`).join('') :
+                    `<div class="action-item">
+              <div class="action-num">1</div>
+              <div class="action-text">Investigate and fix the most reported app performance issues to reduce crash rate</div>
+            </div>
+            <div class="action-item">
+              <div class="action-num">2</div>
+              <div class="action-text">Review and improve customer support response time for trading-related queries</div>
+            </div>
+            <div class="action-item">
+              <div class="action-num">3</div>
+              <div class="action-text">Audit brokerage fee communication and improve transparency in charge breakdowns</div>
+            </div>`
+                }
+        </div>
+      </div>
+
+      <!-- Sources -->
+      <div>
+        <div class="section-header">
+          <div class="section-title">Review Sources</div>
+        </div>
+        <div class="sources-card">
+          <div class="source-row">
+            <div class="source-header">
+              <div class="source-name">🤖 Play Store</div>
+              <div class="source-count">${sources.playstore || 0} reviews</div>
+            </div>
+            <div class="source-bar">
+              <div class="source-fill" style="width:${Math.round((sources.playstore || 0) / total_reviews * 100)}%"></div>
+            </div>
+          </div>
+          <div class="source-row">
+            <div class="source-header">
+              <div class="source-name">🍎 App Store</div>
+              <div class="source-count">${sources.appstore || 0} reviews</div>
+            </div>
+            <div class="source-bar">
+              <div class="source-fill appstore" style="width:${Math.round((sources.appstore || 0) / total_reviews * 100)}%"></div>
+            </div>
+          </div>
+          <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+            <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);margin-bottom:12px">PIPELINE INFO</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+              <div style="font-size:12px;color:var(--muted)">Week</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px">${week}</div>
+              <div style="font-size:12px;color:var(--muted)">Model</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px">llama-3.1-8b</div>
+              <div style="font-size:12px;color:var(--muted)">Embedding</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px">MiniLM-L6-v2</div>
+              <div style="font-size:12px;color:var(--muted)">Delivery</div>
+              <div style="font-family:'DM Mono',monospace;font-size:12px;color:var(--accent)">MCP ✓</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+        }
+
+        loadData();
+    </script>
+</body>
+
+</html>
